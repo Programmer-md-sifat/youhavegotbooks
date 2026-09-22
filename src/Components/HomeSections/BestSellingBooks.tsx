@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Heart, Eye, ShoppingBag, ArrowRight, Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Heart, Eye, ShoppingBag, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCartWishlist } from '../../Context/CartWishlistContext';
 import { BookItem } from '../../Data/HomeData';
 
@@ -128,17 +128,6 @@ export const BestSellingBooks: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 self-start sm:self-auto">
-            {/* Play/Pause control button */}
-            <button
-              type="button"
-              onClick={() => setIsPaused(!isPaused)}
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 text-gray-600 hover:text-[#F26522] hover:border-orange-200 bg-white transition-all shadow-sm active:scale-95"
-              title={isPaused ? 'Resume Auto-Scroll' : 'Pause Auto-Scroll'}
-              aria-label={isPaused ? 'Resume Auto-Scroll' : 'Pause Auto-Scroll'}
-            >
-              {isPaused ? <Play className="w-4 h-4 fill-current ml-0.5" /> : <Pause className="w-4 h-4 fill-current" />}
-            </button>
-
             {/* View All Button */}
             <Link
               to="/books?sort=bestselling"

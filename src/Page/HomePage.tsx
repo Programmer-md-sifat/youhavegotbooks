@@ -7,7 +7,6 @@ import { NewArrivalsSection } from '../Components/HomeSections/NewArrivalsSectio
 import { TopBookCategoriesSection } from '../Components/HomeSections/TopBookCategoriesSection';
 import { FeaturedAuthorsSection } from '../Components/HomeSections/FeaturedAuthorsSection';
 import { OurFavouriteReadsSection } from '../Components/HomeSections/OurFavouriteReadsSection';
-import { StatsAndPromoSection } from '../Components/HomeSections/StatsAndPromoSection';
 
 export const HomePage: React.FC = () => {
   return (
@@ -20,7 +19,6 @@ export const HomePage: React.FC = () => {
         <TopBookCategoriesSection />
         <FeaturedAuthorsSection />
         <OurFavouriteReadsSection />
-        <StatsAndPromoSection />
       </main>
     </PageTransition>
   );
