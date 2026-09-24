@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCartWishlist } from '../../Context/CartWishlistContext';
-import { X, Star, Heart, Check, Shield, BookOpen } from 'lucide-react';
+import { X, Star, Heart, Check, Shield, BookOpen, ExternalLink } from 'lucide-react';
 import { ArrowRightSvg } from './SvgIcons';
 
 export const QuickViewModal: React.FC = () => {
+  const navigate = useNavigate();
   const { quickViewBook, setQuickViewBook, addToCart, toggleWishlist, isInWishlist } =
     useCartWishlist();
   const [selectedFormat, setSelectedFormat] = useState('Hardcover');
@@ -12,6 +14,12 @@ export const QuickViewModal: React.FC = () => {
   if (!quickViewBook) return null;
 
   const wishlisted = isInWishlist(quickViewBook.id);
+
+  const handleOpenDetail = () => {
+    const bookId = quickViewBook.id;
+    setQuickViewBook(null);
+    navigate(`/book/${bookId}`);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -40,7 +48,8 @@ export const QuickViewModal: React.FC = () => {
             <img
               src={quickViewBook.coverImage}
               alt={quickViewBook.title}
-              className="w-48 h-68 object-cover rounded-xl shadow-xl hover:scale-105 transition-transform duration-300"
+              onClick={handleOpenDetail}
+              className="w-48 h-68 object-cover rounded-xl shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer"
             />
             <div className="mt-4 flex items-center gap-4 text-[11px] text-gray-500">
               <span className="flex items-center gap-1">
@@ -58,7 +67,10 @@ export const QuickViewModal: React.FC = () => {
               <span className="text-[11px] font-bold text-[#F26522] uppercase tracking-wider">
                 {quickViewBook.genre}
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-[#1C222E] mt-1 leading-snug">
+              <h2
+                onClick={handleOpenDetail}
+                className="text-xl sm:text-2xl font-bold text-[#1C222E] mt-1 leading-snug hover:text-[#F26522] transition-colors cursor-pointer"
+              >
                 {quickViewBook.title}
               </h2>
               <p className="text-xs text-gray-500 mt-1">by <span className="font-semibold text-gray-700">{quickViewBook.author}</span></p>
@@ -144,6 +156,17 @@ export const QuickViewModal: React.FC = () => {
                   aria-label="Wishlist"
                 >
                   <Heart className={`w-4 h-4 ${wishlisted ? 'fill-[#F26522]' : ''}`} />
+                </button>
+              </div>
+
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={handleOpenDetail}
+                  className="text-xs font-bold text-[#F26522] hover:underline inline-flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>View full product page & details</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
                 </button>
               </div>
 

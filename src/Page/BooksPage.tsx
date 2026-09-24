@@ -345,12 +345,14 @@ export const BooksPage: React.FC = () => {
                         <div>
                           {/* Book Cover with Signature Rounded-2xl and Right Floating Actions */}
                           <div className="relative aspect-[3/4.4] w-full rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.06)] group-hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-all duration-300 bg-gray-50">
-                            <img
-                              src={book.coverImage}
-                              alt={book.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                              loading="lazy"
-                            />
+                            <Link to={`/book/${book.id}`} className="block w-full h-full">
+                              <img
+                                src={book.coverImage}
+                                alt={book.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out cursor-pointer"
+                                loading="lazy"
+                              />
+                            </Link>
 
                             {/* Floating Circular Action Buttons Stacked on Right Edge */}
                             <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 z-20 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">

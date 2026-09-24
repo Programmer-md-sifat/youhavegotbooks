@@ -11,6 +11,7 @@ import { BooksPage } from './Page/BooksPage';
 import { BookDetailPage } from './Page/BookDetailPage';
 import { CartPage } from './Page/CartPage';
 import { WishlistPage } from './Page/WishlistPage';
+import { StorePage } from './Page/StorePage';
 import { SellerPage } from './Page/SellerPage';
 import { BlogPage } from './Page/BlogPage';
 import { ContactPage } from './Page/ContactPage';
@@ -43,10 +44,15 @@ export default function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/books" element={<BooksPage />} />
                 <Route path="/books/:id" element={<BookDetailPage />} />
+                <Route path="/book/:id" element={<BookDetailPage />} />
+                <Route path="/product/:id" element={<BookDetailPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/wishlist" element={<WishlistPage />} />
-                <Route path="/seller" element={<SellerPage />} />
-                <Route path="/vendor" element={<SellerPage />} />
+                <Route path="/store" element={<StorePage />} />
+                <Route path="/stores" element={<StorePage />} />
+                <Route path="/store-list" element={<StorePage />} />
+                <Route path="/seller" element={<StorePage />} />
+                <Route path="/vendor" element={<StorePage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="*" element={<HomePage />} />

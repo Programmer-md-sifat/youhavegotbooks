@@ -132,8 +132,8 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2.5 text-xs text-gray-400 font-medium">
               <li>
-                <Link to="/seller" className="hover:text-[#F26522] transition-colors">
-                  Become a Seller
+                <Link to="/store" className="hover:text-[#F26522] transition-colors">
+                  Store Directory
                 </Link>
               </li>
               <li>

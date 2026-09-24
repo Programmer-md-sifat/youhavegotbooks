@@ -205,9 +205,9 @@ export const OurFavouriteReadsSection: React.FC = () => {
                     key={book.id}
                     className="flex items-center gap-3.5 group p-2 rounded-2xl hover:bg-gray-50/80 transition-colors"
                   >
-                    <div
-                      onClick={() => setQuickViewBook(book)}
-                      className="relative w-16 h-22 sm:w-18 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.06)] group-hover:shadow-[0_4px_14px_rgba(0,0,0,0.12)] bg-gray-100 cursor-pointer transition-all duration-300"
+                    <Link
+                      to={`/book/${book.id}`}
+                      className="relative w-16 h-22 sm:w-18 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.06)] group-hover:shadow-[0_4px_14px_rgba(0,0,0,0.12)] bg-gray-100 cursor-pointer transition-all duration-300 block"
                     >
                       <img
                         src={book.coverImage}
@@ -215,7 +215,7 @@ export const OurFavouriteReadsSection: React.FC = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                       />
-                    </div>
+                    </Link>
                     <div className="flex-1 min-w-0">
                       <Link
                         to={`/book/${book.id}`}
@@ -279,12 +279,14 @@ export const OurFavouriteReadsSection: React.FC = () => {
                     <div>
                       {/* Large Book Cover matching signature style */}
                       <div className="relative aspect-[3/4.4] w-full rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.06)] group-hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-all duration-300 bg-gray-50">
-                        <img
-                          src={book.coverImage}
-                          alt={book.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                          loading="lazy"
-                        />
+                        <Link to={`/book/${book.id}`} className="block w-full h-full">
+                          <img
+                            src={book.coverImage}
+                            alt={book.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out cursor-pointer"
+                            loading="lazy"
+                          />
+                        </Link>
 
                         {/* Floating Circular Action Buttons on Right Edge */}
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 z-20 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
@@ -376,9 +378,9 @@ export const OurFavouriteReadsSection: React.FC = () => {
                     key={book.id}
                     className="flex items-center gap-3.5 group p-2 rounded-2xl hover:bg-gray-50/80 transition-colors"
                   >
-                    <div
-                      onClick={() => setQuickViewBook(book)}
-                      className="relative w-16 h-22 sm:w-18 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.06)] group-hover:shadow-[0_4px_14px_rgba(0,0,0,0.12)] bg-gray-100 cursor-pointer transition-all duration-300"
+                    <Link
+                      to={`/book/${book.id}`}
+                      className="relative w-16 h-22 sm:w-18 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.06)] group-hover:shadow-[0_4px_14px_rgba(0,0,0,0.12)] bg-gray-100 cursor-pointer transition-all duration-300 block"
                     >
                       <img
                         src={book.coverImage}
@@ -386,7 +388,7 @@ export const OurFavouriteReadsSection: React.FC = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                       />
-                    </div>
+                    </Link>
                     <div className="flex-1 min-w-0">
                       <Link
                         to={`/book/${book.id}`}
