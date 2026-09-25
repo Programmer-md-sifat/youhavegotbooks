@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
           {/* Column 1: Logo, Call Support & Social Icons */}
           <div className="lg:col-span-3 space-y-5">
             <div className="flex items-center">
-              <Logo variant="dark" showText={true} />
+              <Logo variant="dark" imageClassName="h-12 sm:h-14 md:h-16 max-h-[64px] w-auto object-contain" />
             </div>
 
             <div className="pt-2">

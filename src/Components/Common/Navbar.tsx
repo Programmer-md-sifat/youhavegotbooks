@@ -11,7 +11,22 @@ import { Logo } from './logo';
 import { useCartWishlist } from '../../Context/CartWishlistContext';
 import { categoriesData } from '../../Data/HomeData';
 import { allBooksCatalog } from '../../Data/BooksData';
-import { ChevronDown, X, LogIn, CheckCircle2 } from 'lucide-react';
+import { topBookCategoriesData } from '../HomeSections/TopBookCategoriesSection';
+import { ChevronDown, ChevronRight, X, LogIn, CheckCircle2, Search } from 'lucide-react';
+
+const CategoryGridIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7">
+    <circle cx="4.5" cy="4.5" r="1.75" />
+    <circle cx="10" cy="4.5" r="1.75" />
+    <circle cx="15.5" cy="4.5" r="1.75" />
+    <circle cx="4.5" cy="10" r="1.75" />
+    <circle cx="10" cy="10" r="1.75" />
+    <circle cx="15.5" cy="10" r="1.75" />
+    <circle cx="4.5" cy="15.5" r="1.75" />
+    <circle cx="10" cy="15.5" r="1.75" />
+    <circle cx="15.5" cy="15.5" r="1.75" />
+  </svg>
+);
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -19,6 +34,7 @@ export const Navbar: React.FC = () => {
   const { cartCount, wishlistCount, cartTotal, setIsCartOpen } = useCartWishlist();
 
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isBooksMegaOpen, setIsBooksMegaOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,6 +42,26 @@ export const Navbar: React.FC = () => {
 
   const categoriesRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+  const megaMenuTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Close mega menu on route change
+  useEffect(() => {
+    setIsBooksMegaOpen(false);
+    setIsMobileMenuOpen(false);
+  }, [location.pathname, location.search]);
+
+  const handleBooksMouseEnter = () => {
+    if (megaMenuTimerRef.current) {
+      clearTimeout(megaMenuTimerRef.current);
+    }
+    setIsBooksMegaOpen(true);
+  };
+
+  const handleBooksMouseLeave = () => {
+    megaMenuTimerRef.current = setTimeout(() => {
+      setIsBooksMegaOpen(false);
+    }, 180);
+  };
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -65,6 +101,9 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'HOME', path: '/' },
     { name: 'BOOKS', path: '/books' },
+    { name: 'E-BOOKS', path: '/books?format=E-Book' },
+    { name: 'DEALS', path: '/books?filter=deals' },
+    { name: 'GIFT & STATIONERY', path: '/store?category=Gift%20%26%20Stationery' },
     { name: 'STORE', path: '/store' },
     { name: 'BLOG', path: '/blog' },
     { name: 'CONTACT', path: '/contact' },
@@ -79,72 +118,73 @@ export const Navbar: React.FC = () => {
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-40 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
       {/* Top Primary Bar */}
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
-        <div className="flex items-center justify-between h-22 sm:h-24 gap-4 md:gap-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-14">
+        <div className="flex items-center justify-between h-16 sm:h-20 md:h-22 gap-4 md:gap-8">
           {/* Brand Logo */}
-          <Logo variant="light" imageClassName="h-16 sm:h-20 md:h-24 max-h-[80px] w-auto object-contain flex-shrink-0" />
+          <Logo variant="light" imageClassName="h-8 sm:h-9 md:h-10 lg:h-11 max-h-[46px] w-auto object-contain flex-shrink-0" />
 
-          {/* Center Search & Categories Container - Pill shape matching uploaded image */}
-          <div
-            ref={searchRef}
-            className="hidden md:flex flex-1 max-w-2xl relative items-center"
-          >
-            <div className="w-full flex items-center bg-white border border-gray-200 rounded-full p-1 shadow-sm hover:border-gray-300 focus-within:border-[#F26522] focus-within:ring-2 focus-within:ring-[#F26522]/15 transition-all">
-              {/* Orange Categories Pill Button */}
-              <div className="relative" ref={categoriesRef}>
-                <button
-                  type="button"
-                  id="categories-dropdown-btn"
-                  onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                  className="bg-[#F26522] hover:bg-[#E05312] text-white rounded-full px-5 py-2.5 flex items-center gap-2 text-xs font-bold tracking-wider uppercase transition-colors cursor-pointer whitespace-nowrap shadow-sm active:scale-98"
-                >
-                  <MenuSvg stroke="#FFFFFF" className="w-4 h-4" />
-                  <span>CATEGORIES</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      isCategoriesOpen ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
+          {/* Center Categories & Search (Separated Components as in Reference Image) */}
+          <div className="hidden md:flex flex-1 max-w-3xl items-center gap-3.5 mx-2 lg:mx-6">
+            {/* 1. Standalone Orange Categories Pill Button */}
+            <div className="relative flex-shrink-0" ref={categoriesRef}>
+              <button
+                type="button"
+                id="categories-dropdown-btn"
+                onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                className="bg-[#F26522] hover:bg-[#E05312] text-white rounded-full px-5 h-11 flex items-center gap-2.5 text-sm font-semibold transition-all cursor-pointer whitespace-nowrap shadow-xs active:scale-98"
+              >
+                <CategoryGridIcon className="w-4 h-4 text-white flex-shrink-0" />
+                <span>Categories</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-white transition-transform duration-200 ${
+                    isCategoriesOpen ? 'rotate-180' : ''
+                  }`}
+                  strokeWidth={2.5}
+                />
+              </button>
 
-                {/* Categories Dropdown Panel */}
-                {isCategoriesOpen && (
-                  <div className="absolute left-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div className="px-3 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-50">
-                      Explore By Genre
-                    </div>
-                    <div className="py-1 max-h-72 overflow-y-auto">
-                      {categoriesData.map((cat) => (
-                        <button
-                          key={cat.id}
-                          onClick={() => {
-                            setIsCategoriesOpen(false);
-                            navigate(`/books?genre=${encodeURIComponent(cat.name)}`);
-                          }}
-                          className="w-full text-left px-3 py-2 text-xs font-medium text-[#28303F] hover:bg-[#FFF7ED] hover:text-[#F26522] rounded-xl flex items-center justify-between transition-colors group cursor-pointer"
-                        >
-                          <span>{cat.name}</span>
-                          <span className="text-[10px] text-gray-400 group-hover:text-[#F26522] bg-gray-50 group-hover:bg-[#FFEDD5] px-1.5 py-0.5 rounded-full font-semibold">
-                            {cat.itemCount}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                    <div className="pt-2 border-t border-gray-50 px-2">
-                      <Link
-                        to="/books"
-                        onClick={() => setIsCategoriesOpen(false)}
-                        className="block w-full py-1.5 text-center text-xs font-bold text-[#F26522] hover:underline"
-                      >
-                        View All Catalogs &rarr;
-                      </Link>
-                    </div>
+              {/* Categories Dropdown Panel */}
+              {isCategoriesOpen && (
+                <div className="absolute left-0 mt-2.5 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="px-3 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-50">
+                    Explore By Genre
                   </div>
-                )}
-              </div>
+                  <div className="py-1 max-h-72 overflow-y-auto">
+                    {categoriesData.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => {
+                          setIsCategoriesOpen(false);
+                          navigate(`/books?genre=${encodeURIComponent(cat.name)}`);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-[#28303F] hover:bg-[#FFF7ED] hover:text-[#F26522] rounded-xl flex items-center justify-between transition-colors group cursor-pointer"
+                      >
+                        <span>{cat.name}</span>
+                        <span className="text-[10px] text-gray-400 group-hover:text-[#F26522] bg-gray-50 group-hover:bg-[#FFEDD5] px-1.5 py-0.5 rounded-full font-semibold">
+                          {cat.itemCount}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="pt-2 border-t border-gray-50 px-2">
+                    <Link
+                      to="/books"
+                      onClick={() => setIsCategoriesOpen(false)}
+                      className="block w-full py-1.5 text-center text-xs font-bold text-[#F26522] hover:underline"
+                    >
+                      View All Catalogs &rarr;
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
 
-              {/* Search Form Input */}
-              <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center pr-2">
+            {/* 2. Standalone Search Bar Pill with Magnifying Glass on the Right */}
+            <div ref={searchRef} className="relative flex-1">
+              <form
+                onSubmit={handleSearchSubmit}
+                className="w-full flex items-center bg-[#F3F4F6] hover:bg-[#EBEEF2] focus-within:bg-white focus-within:border-gray-200 border border-transparent rounded-full h-11 px-5 transition-all focus-within:ring-2 focus-within:ring-[#F26522]/20 shadow-xs"
+              >
                 <input
                   type="text"
                   value={searchTerm}
@@ -154,70 +194,70 @@ export const Navbar: React.FC = () => {
                   }}
                   onFocus={() => setIsSearchFocused(true)}
                   placeholder="Search products..."
-                  className="w-full px-4 py-2 text-sm text-[#28303F] placeholder:text-gray-400 bg-transparent border-none focus:outline-none"
+                  className="w-full bg-transparent text-sm text-[#1C222E] placeholder:text-gray-400 border-none focus:outline-none pr-2"
                 />
                 <button
                   type="submit"
-                  aria-label="Search"
-                  className="p-1.5 rounded-full hover:bg-gray-100 transition-colors text-gray-500 cursor-pointer"
+                  aria-label="Search products"
+                  className="p-1 text-gray-800 hover:text-[#F26522] transition-colors cursor-pointer flex-shrink-0"
                 >
-                  <SearchSvg stroke="#28303F" className="w-5 h-5" />
+                  <Search className="w-4.5 h-4.5" strokeWidth={2.2} />
                 </button>
               </form>
-            </div>
 
-            {/* Live Autocomplete Search Results */}
-            {isSearchFocused && searchTerm.trim().length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                <div className="flex items-center justify-between px-2 py-1 border-b border-gray-50 mb-2">
-                  <span className="text-xs font-semibold text-gray-400">
-                    Search Results ({filteredSearchBooks.length})
-                  </span>
-                  <button
-                    onClick={() => setIsSearchFocused(false)}
-                    className="text-gray-400 hover:text-gray-600 p-1"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+              {/* Live Autocomplete Search Results */}
+              {isSearchFocused && searchTerm.trim().length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="flex items-center justify-between px-2 py-1 border-b border-gray-50 mb-2">
+                    <span className="text-xs font-semibold text-gray-400">
+                      Search Results ({filteredSearchBooks.length})
+                    </span>
+                    <button
+                      onClick={() => setIsSearchFocused(false)}
+                      className="text-gray-400 hover:text-gray-600 p-1"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
 
-                {filteredSearchBooks.length > 0 ? (
-                  <div className="max-h-80 overflow-y-auto space-y-1">
-                    {filteredSearchBooks.slice(0, 5).map((book) => (
-                      <div
-                        key={book.id}
-                        onClick={() => {
-                          setIsSearchFocused(false);
-                          setSearchTerm('');
-                          navigate(`/books/${book.id}`);
-                        }}
-                        className="flex items-center gap-3 p-2 hover:bg-[#FFF7ED] rounded-xl cursor-pointer transition-colors group"
-                      >
-                        <img
-                          src={book.coverImage}
-                          alt={book.title}
-                          className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0"
-                          loading="lazy"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-xs font-bold text-[#1C222E] group-hover:text-[#F26522] truncate">
-                            {book.title}
-                          </h4>
-                          <p className="text-[11px] text-gray-500 truncate">{book.author}</p>
-                          <span className="text-xs font-bold text-[#F26522]">
-                            ${book.price.toFixed(2)}
-                          </span>
+                  {filteredSearchBooks.length > 0 ? (
+                    <div className="max-h-80 overflow-y-auto space-y-1">
+                      {filteredSearchBooks.slice(0, 5).map((book) => (
+                        <div
+                          key={book.id}
+                          onClick={() => {
+                            setIsSearchFocused(false);
+                            setSearchTerm('');
+                            navigate(`/books/${book.id}`);
+                          }}
+                          className="flex items-center gap-3 p-2 hover:bg-[#FFF7ED] rounded-xl cursor-pointer transition-colors group"
+                        >
+                          <img
+                            src={book.coverImage}
+                            alt={book.title}
+                            className="w-10 h-14 object-cover rounded shadow-sm flex-shrink-0"
+                            loading="lazy"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-xs font-bold text-[#1C222E] group-hover:text-[#F26522] truncate">
+                              {book.title}
+                            </h4>
+                            <p className="text-[11px] text-gray-500 truncate">{book.author}</p>
+                            <span className="text-xs font-bold text-[#F26522]">
+                              ${book.price.toFixed(2)}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-6 text-center text-xs text-gray-500">
-                    No books found matching &quot;{searchTerm}&quot;
-                  </div>
-                )}
-              </div>
-            )}
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-6 text-center text-xs text-gray-500">
+                      No books found matching &quot;{searchTerm}&quot;
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right Action Icons (User, Favourite/Wishlist with '3' badge, Cart with '2' badge & $0.00) */}
@@ -286,23 +326,38 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Secondary Bottom Navigation (Centered Links: HOME, BOOKS, SELLER, BLOG, CONTACT) */}
-      <nav className="hidden md:block border-t border-gray-100 bg-white">
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
-          <ul className="flex items-center justify-center gap-8 lg:gap-12 py-3.5">
+      {/* Secondary Bottom Navigation (Left-Aligned Links: HOME, BOOKS with Chevron, STORE, BLOG, CONTACT) */}
+      <nav className="hidden md:block border-t border-gray-100 bg-white relative">
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 relative">
+          <ul className="flex items-center justify-start gap-5 md:gap-6 lg:gap-8 xl:gap-9 py-3.5 overflow-x-auto no-scrollbar">
             {navLinks.map((link) => {
               const active = isActive(link.path);
+              const isBooks = link.name === 'BOOKS';
+
               return (
-                <li key={link.name}>
+                <li
+                  key={link.name}
+                  onMouseEnter={isBooks ? handleBooksMouseEnter : undefined}
+                  onMouseLeave={isBooks ? handleBooksMouseLeave : undefined}
+                  className="relative group"
+                >
                   <Link
                     to={link.path}
-                    className={`text-xs lg:text-sm font-bold tracking-wider transition-all relative py-1 ${
-                      active
+                    className={`text-xs lg:text-sm font-bold tracking-wider transition-all relative py-1 flex items-center gap-1.5 ${
+                      active || (isBooks && isBooksMegaOpen)
                         ? 'text-[#F26522]'
                         : 'text-[#28303F] hover:text-[#F26522]'
                     }`}
                   >
-                    {link.name}
+                    <span>{link.name}</span>
+                    {isBooks && (
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          isBooksMegaOpen ? 'rotate-180 text-[#F26522]' : 'text-gray-500 group-hover:text-[#F26522]'
+                        }`}
+                        strokeWidth={2.5}
+                      />
+                    )}
                     {active && (
                       <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F26522] rounded-full" />
                     )}
@@ -311,6 +366,59 @@ export const Navbar: React.FC = () => {
               );
             })}
           </ul>
+
+          {/* Books Mega Menu Dropdown (Left-Aligned below Books Menu) */}
+          {isBooksMegaOpen && (
+            <div
+              onMouseEnter={handleBooksMouseEnter}
+              onMouseLeave={handleBooksMouseLeave}
+              className="absolute top-full left-6 sm:left-8 lg:left-12 mt-1 w-[960px] lg:w-[1080px] xl:w-[1160px] max-w-[95vw] bg-white rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100/80 p-6 sm:p-8 lg:p-9 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+            >
+              {/* Top Pointer Arrow pointing directly to Books Menu */}
+              <div className="absolute -top-2 left-16 sm:left-20 w-4 h-4 bg-white rotate-45 border-t border-l border-gray-100 shadow-[-2px_-2px_4px_rgba(0,0,0,0.02)]" />
+
+              {/* 3-Column x 2-Row Category Grid (6 Categories Total Matching Reference Image) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-10 lg:gap-x-16 gap-y-7 sm:gap-y-8 relative z-10">
+                {topBookCategoriesData.slice(0, 6).map((cat) => (
+                  <div key={cat.id} className="flex flex-col group">
+                    {/* Category Title */}
+                    <Link
+                      to={`/books?genre=${encodeURIComponent(cat.genreParam)}`}
+                      onClick={() => setIsBooksMegaOpen(false)}
+                      className="font-bold text-[#111827] text-[16px] sm:text-[17px] lg:text-[18px] group-hover:text-[#F26522] transition-colors leading-snug tracking-tight mb-2.5 block"
+                    >
+                      {cat.title}
+                    </Link>
+
+                    {/* Subcategories List (4 items matching reference image) */}
+                    <ul className="space-y-2 mb-2.5">
+                      {cat.subcategories.slice(0, 4).map((sub, idx) => (
+                        <li key={idx}>
+                          <Link
+                            to={sub.path}
+                            onClick={() => setIsBooksMegaOpen(false)}
+                            className="text-[13.5px] sm:text-[14px] text-gray-500 hover:text-[#F26522] transition-colors inline-block truncate max-w-full font-normal leading-normal"
+                          >
+                            {sub.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* View More Link */}
+                    <Link
+                      to={`/books?genre=${encodeURIComponent(cat.genreParam)}`}
+                      onClick={() => setIsBooksMegaOpen(false)}
+                      className="inline-flex items-center gap-1.5 text-[13.5px] sm:text-[14px] font-bold text-[#111827] hover:text-[#F26522] transition-colors mt-0.5 cursor-pointer group/vm"
+                    >
+                      <span>View More</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-[#F26522] stroke-[3] transition-transform group-hover/vm:translate-x-0.5" />
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 

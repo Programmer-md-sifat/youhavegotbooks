@@ -48,7 +48,7 @@ export interface BookItem {
   badge?: string;
   genre: string;
   synopsis: string;
-  format: ('Hardcover' | 'Paperback' | 'E-Book' | 'Audiobook')[];
+  format: ('Hardcover' | 'Paperback' | 'E-Book' | 'Audiobook' | 'E-book' | 'Hardcopy')[];
   inStock: boolean;
   pages: number;
   publishYear: number;

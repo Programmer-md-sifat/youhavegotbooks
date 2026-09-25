@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { PageTransition } from '../Components/Common/PageTransition';
 import { allBooksCatalog } from '../Data/BooksData';
@@ -13,6 +13,12 @@ export const BooksPage: React.FC = () => {
 
   // Filter States
   const [selectedGenres, setSelectedGenres] = useState<string[]>(genreParam ? [genreParam] : []);
+
+  useEffect(() => {
+    if (genreParam) {
+      setSelectedGenres([genreParam]);
+    }
+  }, [genreParam]);
   const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
   const [appliedMinPrice, setAppliedMinPrice] = useState<number>(50);
   const [appliedMaxPrice, setAppliedMaxPrice] = useState<number>(1000);

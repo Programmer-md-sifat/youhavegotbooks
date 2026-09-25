@@ -13,6 +13,7 @@ import {
   Plus,
   Check,
   X,
+  ChevronLeft,
   ChevronRight,
   ZoomIn,
   Sparkles,
@@ -154,6 +155,32 @@ export const BookDetailPage: React.FC = () => {
     setSelectedFormat('Hardcopy');
   }, [id]);
 
+  // Keyboard controls for zoom lightbox (Escape to close, Left/Right arrows to navigate)
+  useEffect(() => {
+    if (!isZoomOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsZoomOpen(false);
+      } else if (e.key === 'ArrowLeft') {
+        setActiveImageIndex((prev) => (prev > 0 ? prev - 1 : galleryImages.length - 1));
+      } else if (e.key === 'ArrowRight') {
+        setActiveImageIndex((prev) => (prev < galleryImages.length - 1 ? prev + 1 : 0));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isZoomOpen, galleryImages.length]);
+
+  const handlePrevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setActiveImageIndex((prev) => (prev > 0 ? prev - 1 : galleryImages.length - 1));
+  };
+
+  const handleNextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setActiveImageIndex((prev) => (prev < galleryImages.length - 1 ? prev + 1 : 0));
+  };
+
   const isWish = isInWishlist(book.id);
 
   // Price calculations based on selected format
@@ -200,7 +227,7 @@ export const BookDetailPage: React.FC = () => {
               {book.genre ? book.genre.toUpperCase() : 'ACTION & ADVENTURE'}
             </Link>
             <span className="text-gray-300">→</span>
-            <span className="text-[#FF4E3E] font-black truncate max-w-md">
+            <span className="text-[#F26522] font-black truncate max-w-md">
               {book.title.toUpperCase()}
             </span>
           </div>
@@ -223,7 +250,7 @@ export const BookDetailPage: React.FC = () => {
                       onClick={() => setActiveImageIndex(idx)}
                       className={`w-16 sm:w-20 aspect-[3/4.2] rounded-xl overflow-hidden bg-gray-50 transition-all cursor-pointer ${
                         activeImageIndex === idx
-                          ? 'ring-2 ring-[#FF4E3E] shadow-md scale-105'
+                          ? 'ring-2 ring-[#F26522] shadow-md scale-105'
                           : 'border border-gray-200 opacity-75 hover:opacity-100'
                       }`}
                     >
@@ -297,7 +324,7 @@ export const BookDetailPage: React.FC = () => {
                 <div className="border-b border-gray-100 pt-2" />
 
                 {/* Price Range */}
-                <div className="text-2xl sm:text-3xl font-extrabold text-[#FF4E3E] tracking-tight">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#F26522] tracking-tight">
                   {formattedPriceRange}
                 </div>
 
@@ -320,7 +347,7 @@ export const BookDetailPage: React.FC = () => {
                       onClick={() => setSelectedFormat('E-book')}
                       className={`px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                         selectedFormat === 'E-book'
-                          ? 'border-2 border-[#FF4E3E] text-[#FF4E3E] bg-white shadow-xs'
+                          ? 'border-2 border-[#F26522] text-[#F26522] bg-[#FFF7ED] shadow-xs'
                           : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-transparent'
                       }`}
                     >
@@ -333,7 +360,7 @@ export const BookDetailPage: React.FC = () => {
                       onClick={() => setSelectedFormat('Hardcopy')}
                       className={`px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                         selectedFormat === 'Hardcopy'
-                          ? 'border-2 border-[#FF4E3E] text-[#FF4E3E] bg-white shadow-xs'
+                          ? 'border-2 border-[#F26522] text-[#F26522] bg-[#FFF7ED] shadow-xs'
                           : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-transparent'
                       }`}
                     >
@@ -352,7 +379,7 @@ export const BookDetailPage: React.FC = () => {
                 </div>
 
                 {/* Active Format Price */}
-                <div className="text-2xl sm:text-3xl font-extrabold text-[#FF4E3E] tracking-tight pt-1">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#F26522] tracking-tight pt-1">
                   ${currentPrice.toFixed(2)}
                 </div>
 
@@ -382,11 +409,11 @@ export const BookDetailPage: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Add to Cart Red/Orange Button with Bag Icon */}
+                  {/* Add to Cart Orange Button with Bag Icon */}
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="flex-1 sm:flex-initial px-8 py-3.5 bg-[#FF4E3E] hover:bg-[#E03A2B] active:scale-95 text-white font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-md shadow-[#FF4E3E]/30 flex items-center justify-center gap-2.5 transition-all cursor-pointer"
+                    className="flex-1 sm:flex-initial px-8 py-3.5 bg-[#F26522] hover:bg-[#E05312] active:scale-95 text-white font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-md shadow-[#F26522]/25 flex items-center justify-center gap-2.5 transition-all cursor-pointer"
                   >
                     <ShoppingBag className="w-4 h-4" />
                     <span>Add to cart</span>
@@ -396,11 +423,11 @@ export const BookDetailPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => toggleWishlist(book)}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-[#FF4E3E] transition-colors cursor-pointer px-2 py-1"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-[#F26522] transition-colors cursor-pointer px-2 py-1"
                   >
                     <Heart
                       className={`w-4 h-4 ${
-                        isWish ? 'fill-[#FF4E3E] text-[#FF4E3E]' : 'stroke-[2]'
+                        isWish ? 'fill-[#F26522] text-[#F26522]' : 'stroke-[2]'
                       }`}
                     />
                     <span>{isWish ? 'Added to wishlist' : 'Add to wishlist'}</span>
@@ -456,7 +483,7 @@ export const BookDetailPage: React.FC = () => {
             >
               Description
               {activeTab === 'description' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF4E3E] rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F26522] rounded-full" />
               )}
             </button>
 
@@ -471,7 +498,7 @@ export const BookDetailPage: React.FC = () => {
             >
               Additional information
               {activeTab === 'additional' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF4E3E] rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F26522] rounded-full" />
               )}
             </button>
 
@@ -486,7 +513,7 @@ export const BookDetailPage: React.FC = () => {
             >
               Reviews (5)
               {activeTab === 'reviews' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF4E3E] rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F26522] rounded-full" />
               )}
             </button>
           </div>
@@ -605,7 +632,7 @@ export const BookDetailPage: React.FC = () => {
                   <textarea
                     rows={3}
                     placeholder="Write your review here..."
-                    className="w-full text-xs p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#FF4E3E]"
+                    className="w-full text-xs p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#F26522]"
                   />
                   {reviewSubmitted ? (
                     <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-700 flex items-center gap-2">
@@ -616,7 +643,7 @@ export const BookDetailPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setReviewSubmitted(true)}
-                      className="px-6 py-2.5 bg-[#FF4E3E] hover:bg-[#E03A2B] text-white font-bold text-xs uppercase tracking-wider rounded-full transition-all cursor-pointer"
+                      className="px-6 py-2.5 bg-[#F26522] hover:bg-[#E05312] text-white font-bold text-xs uppercase tracking-wider rounded-full transition-all cursor-pointer shadow-sm"
                     >
                       Submit Review
                     </button>
@@ -656,7 +683,7 @@ export const BookDetailPage: React.FC = () => {
                     </div>
 
                     {/* Book Title */}
-                    <h3 className="text-xs sm:text-sm font-extrabold text-[#111827] group-hover:text-[#FF4E3E] transition-colors leading-snug line-clamp-1">
+                    <h3 className="text-xs sm:text-sm font-extrabold text-[#111827] group-hover:text-[#F26522] transition-colors leading-snug line-clamp-1">
                       {relProduct.title}
                     </h3>
 
@@ -683,8 +710,8 @@ export const BookDetailPage: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Price in Coral/Red */}
-                  <div className="mt-2 text-xs sm:text-sm font-black text-[#FF4E3E] tracking-tight">
+                  {/* Price in Brand Orange */}
+                  <div className="mt-2 text-xs sm:text-sm font-black text-[#F26522] tracking-tight">
                     {relProduct.price}
                   </div>
                 </div>
@@ -694,33 +721,53 @@ export const BookDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 5. Image Lightbox Zoom Modal */}
+        {/* 5. Image Lightbox Zoom Modal (Clean Card Design with Generous Width) */}
         {isZoomOpen && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-            <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-3xl p-4 overflow-hidden flex flex-col items-center">
+          <div
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
+            onClick={() => setIsZoomOpen(false)}
+          >
+            <div
+              className="relative w-full max-w-[480px] sm:max-w-[540px] md:max-w-[580px] max-h-[92vh] bg-white rounded-[28px] sm:rounded-[32px] p-4 sm:p-5 shadow-2xl overflow-hidden flex flex-col items-center gap-3.5 border border-gray-100 animate-in zoom-in-95 duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Floating Close Button Top Right */}
               <button
                 type="button"
                 onClick={() => setIsZoomOpen(false)}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center transition-colors cursor-pointer z-10"
-                aria-label="Close zoom"
+                className="absolute top-6 right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/75 hover:bg-black text-white flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer z-20 shadow-md"
+                aria-label="Close zoom preview"
               >
                 <X className="w-5 h-5" />
               </button>
-              <img
-                src={galleryImages[activeImageIndex]}
-                alt={book.title}
-                className="max-h-[80vh] w-auto object-contain rounded-2xl"
-              />
-              <div className="flex items-center gap-3 mt-3">
+
+              {/* Main Book Image with Wide Proportions */}
+              <div className="relative w-full aspect-[3/4.1] max-h-[68vh] rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center shadow-inner">
+                <img
+                  src={galleryImages[activeImageIndex]}
+                  alt={book.title}
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+              </div>
+
+              {/* Bottom Thumbnail Strip */}
+              <div className="flex items-center justify-center gap-3 pt-1">
                 {galleryImages.map((img, idx) => (
                   <button
                     key={idx}
+                    type="button"
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`w-12 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                      activeImageIndex === idx ? 'border-[#FF4E3E]' : 'border-transparent opacity-60'
+                    className={`w-14 sm:w-16 aspect-[3/4.2] rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
+                      activeImageIndex === idx
+                        ? 'border-[#F26522] ring-2 ring-[#F26522]/30 scale-105 shadow-md'
+                        : 'border-gray-200 opacity-60 hover:opacity-100 hover:border-gray-300'
                     }`}
                   >
-                    <img src={img} alt="thumb" className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

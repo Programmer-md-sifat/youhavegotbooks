@@ -1,157 +1,219 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
-export interface TopCategoryItem {
+export interface CategoryItemData {
   id: string;
-  name: string;
-  bookCount: string;
-  bgColor: string;
-  shadowColor: string;
-  slug: string;
+  title: string;
+  genreParam: string;
+  image: string;
+  subcategories: {
+    name: string;
+    path: string;
+  }[];
 }
 
-export const topBookCategoriesData: TopCategoryItem[] = [
+export const topBookCategoriesData: CategoryItemData[] = [
   {
-    id: 'top-cat-1',
-    name: 'Fiction',
-    bookCount: '1,250 books',
-    bgColor: '#FF5700',
-    shadowColor: 'rgba(255, 87, 0, 0.28)',
-    slug: 'fiction',
+    id: 'cat-biographies',
+    title: 'Biographies & Memoirs',
+    genreParam: 'Biographies & Memoirs',
+    image: '/images/books/eat-a-peach.jpg',
+    subcategories: [
+      { name: 'Historical Biographies', path: '/books?genre=Biographies%20%26%20Memoirs' },
+      { name: 'Leaders & Notable', path: '/books?genre=Biographies%20%26%20Memoirs' },
+      { name: 'Modern Biographies', path: '/books?genre=Biographies%20%26%20Memoirs' },
+      { name: 'Sports Biographies', path: '/books?genre=Biographies%20%26%20Memoirs' },
+      { name: 'United States Biographies', path: '/books?genre=Biographies%20%26%20Memoirs' },
+    ],
   },
   {
-    id: 'top-cat-2',
-    name: 'Non-Fiction',
-    bookCount: '890 books',
-    bgColor: '#0BB07B',
-    shadowColor: 'rgba(11, 176, 123, 0.28)',
-    slug: 'non-fiction',
+    id: 'cat-childrens',
+    title: "Children's Books",
+    genreParam: "Children's",
+    image: '/images/books/a-place-called-perfect.jpg',
+    subcategories: [
+      { name: 'Action & Adventure', path: "/books?genre=Children's" },
+      { name: "Children's Animal Books", path: "/books?genre=Children's" },
+      { name: "Children's Humor", path: "/books?genre=Children's" },
+      { name: 'Sci-Fi & Fantasy Books', path: "/books?genre=Children's" },
+      { name: "Classic Children's Books", path: "/books?genre=Children's" },
+    ],
   },
   {
-    id: 'top-cat-3',
-    name: 'Mystery',
-    bookCount: '654 books',
-    bgColor: '#7B42F6',
-    shadowColor: 'rgba(123, 66, 246, 0.28)',
-    slug: 'mystery',
+    id: 'cat-literature',
+    title: 'Literature & Fiction',
+    genreParam: 'Literature & Fiction',
+    image: '/images/books/certain-hunger.jpg',
+    subcategories: [
+      { name: 'Classic Books', path: '/books?genre=Literature%20%26%20Fiction' },
+      { name: 'Contemporary Literature', path: '/books?genre=Literature%20%26%20Fiction' },
+      { name: 'Foreign Language Fiction', path: '/books?genre=Literature%20%26%20Fiction' },
+      { name: 'Genre Fiction', path: '/books?genre=Literature%20%26%20Fiction' },
+      { name: 'History & Criticism', path: '/books?genre=Literature%20%26%20Fiction' },
+    ],
   },
   {
-    id: 'top-cat-4',
-    name: 'Romance',
-    bookCount: '723 books',
-    bgColor: '#E11D48',
-    shadowColor: 'rgba(225, 29, 72, 0.28)',
-    slug: 'romance',
+    id: 'cat-mystery-thriller',
+    title: 'Mystery, Thriller',
+    genreParam: 'Mystery & Thriller',
+    image: '/images/books/ring-shout.jpg',
+    subcategories: [
+      { name: 'Crime Books', path: '/books?genre=Mystery%20%26%20Thriller' },
+      { name: 'Detective Books', path: '/books?genre=Mystery%20%26%20Thriller' },
+      { name: 'Mystery Books', path: '/books?genre=Mystery%20%26%20Thriller' },
+      { name: 'Suspense Books', path: '/books?genre=Mystery%20%26%20Thriller' },
+      { name: 'Thrillers', path: '/books?genre=Mystery%20%26%20Thriller' },
+    ],
   },
   {
-    id: 'top-cat-5',
-    name: 'Sci-Fi',
-    bookCount: '432 books',
-    bgColor: '#0088D1',
-    shadowColor: 'rgba(0, 136, 209, 0.28)',
-    slug: 'sci-fi',
+    id: 'cat-religion-spirituality',
+    title: 'Religion & Spirituality',
+    genreParam: 'Religion & Spirituality',
+    image: '/images/books/the-illness-lesson.jpg',
+    subcategories: [
+      { name: 'Astrology Books', path: '/books?genre=Religion%20%26%20Spirituality' },
+      { name: 'Christian Books & Bibles', path: '/books?genre=Religion%20%26%20Spirituality' },
+      { name: 'History of Religion Books', path: '/books?genre=Religion%20%26%20Spirituality' },
+      { name: 'Inspirational Books', path: '/books?genre=Religion%20%26%20Spirituality' },
+      { name: 'New Age Books', path: '/books?genre=Religion%20%26%20Spirituality' },
+    ],
   },
   {
-    id: 'top-cat-6',
-    name: 'Biography',
-    bookCount: '387 books',
-    bgColor: '#414E62',
-    shadowColor: 'rgba(65, 78, 98, 0.28)',
-    slug: 'biography',
+    id: 'cat-romance',
+    title: 'Romance',
+    genreParam: 'Romance',
+    image: '/images/books/felix.jpg',
+    subcategories: [
+      { name: 'Contemporary Romance', path: '/books?genre=Romance' },
+      { name: 'Romantic Fantasy', path: '/books?genre=Romance' },
+      { name: 'Romantic Historical', path: '/books?genre=Romance' },
+      { name: 'Romantic Mystery', path: '/books?genre=Romance' },
+      { name: 'Romantic Sci-Fi', path: '/books?genre=Romance' },
+    ],
   },
   {
-    id: 'top-cat-7',
-    name: 'Business',
-    bookCount: '540 books',
-    bgColor: '#008C7A',
-    shadowColor: 'rgba(0, 140, 122, 0.28)',
-    slug: 'business',
+    id: 'cat-fiction-fantasy',
+    title: 'Fiction & Fantasy',
+    genreParam: 'Sci-Fi & Fantasy',
+    image: '/images/books/dune.jpg',
+    subcategories: [
+      { name: 'Action & Adventure', path: '/books?genre=Sci-Fi%20%26%20Fantasy' },
+      { name: 'Coming of Age Sci-Fi Books', path: '/books?genre=Sci-Fi%20%26%20Fantasy' },
+      { name: 'Historical Sci-Fi', path: '/books?genre=Sci-Fi%20%26%20Fantasy' },
+      { name: 'Sci-Fi Horror Books', path: '/books?genre=Sci-Fi%20%26%20Fantasy' },
+      { name: 'Sci-Fi Humor Books', path: '/books?genre=Sci-Fi%20%26%20Fantasy' },
+    ],
   },
   {
-    id: 'top-cat-8',
-    name: 'Children',
-    bookCount: '615 books',
-    bgColor: '#7E57C2',
-    shadowColor: 'rgba(126, 87, 194, 0.28)',
-    slug: 'children',
+    id: 'cat-history',
+    title: 'History',
+    genreParam: 'History',
+    image: '/images/books/a-light-so-lovely.jpg',
+    subcategories: [
+      { name: 'Military History', path: '/books?genre=History' },
+      { name: 'Modern History', path: '/books?genre=History' },
+      { name: 'Religious History Books', path: '/books?genre=History' },
+      { name: 'United States History', path: '/books?genre=History' },
+      { name: 'World History Books', path: '/books?genre=History' },
+    ],
   },
   {
-    id: 'top-cat-9',
-    name: 'Cooking',
-    bookCount: '480 books',
-    bgColor: '#F59E0B',
-    shadowColor: 'rgba(245, 158, 11, 0.28)',
-    slug: 'cooking',
-  },
-  {
-    id: 'top-cat-10',
-    name: 'History',
-    bookCount: '520 books',
-    bgColor: '#D97706',
-    shadowColor: 'rgba(217, 119, 6, 0.28)',
-    slug: 'history',
+    id: 'cat-teen-young-adult',
+    title: 'Teen & Young Adult',
+    genreParam: 'Young Adult',
+    image: '/images/books/clap-when-you-land.jpg',
+    subcategories: [
+      { name: 'Teen Fantasy Books', path: '/books?genre=Young%20Adult' },
+      { name: 'Teen Hobbies', path: '/books?genre=Young%20Adult' },
+      { name: 'Teen Horror Books', path: '/books?genre=Young%20Adult' },
+      { name: 'Teen Romance', path: '/books?genre=Young%20Adult' },
+      { name: 'Teen Sci-Fi Books', path: '/books?genre=Young%20Adult' },
+    ],
   },
 ];
 
 export const TopBookCategoriesSection: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
-    <section className="py-12 sm:py-16 bg-[#FAF9F6] border-t border-gray-100" id="top-book-categories-section">
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
-        
-        {/* Rounded Card Container matching the uploaded design */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-gray-100/80 shadow-[0_4px_30px_rgba(0,0,0,0.04)]">
-          
-          {/* Header Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-9">
+    <section className="py-14 sm:py-18 lg:py-20 bg-white" id="top-book-categories-section">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        {/* Optional Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-gray-100">
+          <div>
             <h2
               id="top-categories-heading"
-              className="text-2xl sm:text-3xl font-extrabold text-[#1C222E] tracking-tight"
+              className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight"
             >
               Top Book Categories
             </h2>
-
-            <Link
-              to="/books"
-              className="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-full bg-[#F26522] hover:bg-[#d85416] text-white font-semibold text-xs sm:text-sm tracking-wide transition-all shadow-sm hover:shadow-md active:scale-95 self-start sm:self-auto"
-            >
-              <span>View All Categories</span>
-              <ChevronRight className="w-4 h-4 stroke-[2.5]" />
-            </Link>
+            <p className="text-sm text-gray-500 mt-1">Explore our most popular genres and curated reading lists</p>
           </div>
 
-          {/* 10 Categories Grid: 2 Rows of 5 Columns on Desktop */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
-            {topBookCategoriesData.map((category) => (
-              <div
-                key={category.id}
-                onClick={() => navigate(`/books?genre=${encodeURIComponent(category.name)}`)}
-                className="group relative flex flex-col items-center justify-center h-32 sm:h-36 rounded-2xl sm:rounded-[20px] p-4 text-center cursor-pointer overflow-hidden transition-all duration-300 hover:-translate-y-1.5 active:scale-95 shadow-sm hover:shadow-xl"
-                style={{
-                  backgroundColor: category.bgColor,
-                  boxShadow: `0 10px 25px -5px ${category.shadowColor}`,
-                }}
-              >
-                {/* Subtle translucent circular background element in the bottom right corner */}
-                <div className="absolute -bottom-5 -right-5 w-20 sm:w-24 h-20 sm:h-24 rounded-full bg-white/15 pointer-events-none transition-transform duration-300 group-hover:scale-110" />
-
-                {/* Category Name */}
-                <span className="relative z-10 text-lg sm:text-xl font-bold text-white tracking-tight drop-shadow-sm">
-                  {category.name}
-                </span>
-
-                {/* Book Count */}
-                <span className="relative z-10 text-xs sm:text-sm font-medium text-white/90 mt-1 tracking-normal">
-                  {category.bookCount}
-                </span>
-              </div>
-            ))}
-          </div>
-
+          <Link
+            to="/books"
+            className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-[#F26522] hover:bg-[#d85416] text-white font-semibold text-xs sm:text-sm tracking-wide transition-all shadow-sm hover:shadow-md active:scale-95 self-start sm:self-auto cursor-pointer"
+          >
+            <span>View All Categories</span>
+            <ChevronRight className="w-4 h-4 stroke-[2.5]" />
+          </Link>
         </div>
 
+        {/* 3x3 Grid of Category Items Matching the Design Reference */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-10 xl:gap-x-14 gap-y-10 sm:gap-y-12 lg:gap-y-14">
+          {topBookCategoriesData.map((cat) => (
+            <div
+              key={cat.id}
+              className="flex flex-row items-start gap-5 sm:gap-6 group"
+            >
+              {/* Left Side: Book Cover with smooth rounded corners and tall aspect ratio */}
+              <Link
+                to={`/books?genre=${encodeURIComponent(cat.genreParam)}`}
+                className="relative shrink-0 w-[135px] sm:w-[150px] lg:w-[160px] h-[200px] sm:h-[225px] lg:h-[240px] block overflow-hidden rounded-[20px] shadow-sm group-hover:shadow-md transition-all duration-300"
+              >
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </Link>
+
+              {/* Right Side: Category Name, 5 Subcategories & View More Link */}
+              <div className="flex-1 min-w-0 flex flex-col pt-1">
+                {/* Category Title */}
+                <Link
+                  to={`/books?genre=${encodeURIComponent(cat.genreParam)}`}
+                  className="text-[17px] sm:text-[18px] lg:text-[19px] font-bold text-[#111827] group-hover:text-[#F26522] transition-colors leading-snug tracking-tight mb-3 block"
+                >
+                  {cat.title}
+                </Link>
+
+                {/* Subcategories List */}
+                <ul className="space-y-1.5 sm:space-y-2 mb-3">
+                  {cat.subcategories.map((sub, idx) => (
+                    <li key={idx}>
+                      <Link
+                        to={sub.path}
+                        className="text-[13.5px] sm:text-[14px] text-gray-500 hover:text-[#F26522] transition-colors inline-block truncate max-w-full font-normal leading-normal"
+                      >
+                        {sub.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* View More Link */}
+                <Link
+                  to={`/books?genre=${encodeURIComponent(cat.genreParam)}`}
+                  className="inline-flex items-center gap-1.5 text-[13.5px] sm:text-[14px] font-bold text-[#111827] hover:text-[#F26522] transition-colors group/more cursor-pointer mt-1"
+                >
+                  <span>View More</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#F26522] stroke-[3] transition-transform group-hover/more:translate-x-0.5" />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
